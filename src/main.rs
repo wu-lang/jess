@@ -21,11 +21,11 @@ use git2::{RemoteCallbacks, Progress, FetchOptions};
 
 
 const HELP: &'static str = "\
-The Jens Package Manager
+The Jess Package Manager
 
 Usage:
-    jens           # Display this
-    jens <command> # Read further below
+    jess           # Display this
+    jess <command> # Read further below
 
 Commands:
     new <name>     # Creates a new project at optional path
@@ -55,31 +55,29 @@ fn new(name: Option<&str>) {
       let mut init = File::create(&format!("{}/init.wu", name)).unwrap();
       init.write_all(b"# exposing things for library use\nimport src\n").unwrap();
 
-      let mut jens_toml = File::create(&format!("{}/jens.toml", name)).unwrap();
-      jens_toml.write_all(b"[depends]\n").unwrap();
+      let mut jess_toml = File::create(&format!("{}/jess.toml", name)).unwrap();
+      jess_toml.write_all(b"[dependencies]\n").unwrap();
 
-      let mut jens_init = File::create(&format!("{}/src/init.wu", name)).unwrap();
-      jens_init.write_all(b"# here we go\n").unwrap();
+      let mut jess_init = File::create(&format!("{}/src/init.wu", name)).unwrap();
     }
   } else {
-    let mut jens_toml = File::create("jens.toml").unwrap();
-    jens_toml.write_all(b"[depends]").unwrap();
+    let mut jess_toml = File::create("jess.toml").unwrap();
+    jess_toml.write_all(b"[dependencies]").unwrap();
 
-    let mut jens_init = File::create("src/init.wu").unwrap();
-    jens_init.write_all(b"# here we go\n").unwrap();
+    let mut jess_init = File::create("src/init.wu").unwrap();
   }
 }
 
 
 fn get() {
-  if Path::new("jens.toml").exists() {
-    let mut config = File::open("jens.toml").unwrap();
+  if Path::new("jess.toml").exists() {
+    let mut config = File::open("jess.toml").unwrap();
     
     let mut contents = String::new();
     config.read_to_string(&mut contents).unwrap();
 
     match toml::from_str::<Value>(&contents) {
-      Ok(value) => match value.get("depends") {
+      Ok(value) => match value.get("dependencies") {
         Some(depends) => match *depends {
           Value::Table(ref t) => {
             let mut modules = Vec::new();
@@ -101,7 +99,7 @@ fn get() {
 
                 modules.push(format!("import {}", member.0))
               } else {
-                wrong("expected string url value")
+                wrong("expected string URL value")
               }
             }
             
@@ -116,11 +114,11 @@ fn get() {
         _ => (),
       },
 
-      Err(_)  => wrong("something went wrong in 'jens.toml'"),
+      Err(_)  => wrong("something went wrong in 'jess.toml'"),
     }
 
   } else {
-      wrong("couldn't find 'jens.toml'");
+      wrong("couldn't find 'jess.toml'");
   }
 }
 
