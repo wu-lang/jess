@@ -58,7 +58,7 @@ fn new(name: Option<&str>) {
       let mut jess_toml = File::create(&format!("{}/jess.toml", name)).unwrap();
       jess_toml.write_all(b"[dependencies]\n").unwrap();
 
-      let mut jess_init = File::create(&format!("{}/src/init.wu", name)).unwrap();
+      File::create(&format!("{}/src/init.wu", name)).unwrap();
     }
   } else {
     let mut jess_toml = File::create("jess.toml").unwrap();
@@ -99,7 +99,7 @@ fn get() {
 
                 modules.push(format!("import {}", member.0))
               } else {
-                wrong("expected string URL value")
+                wrong("Expected string URL value")
               }
             }
             
@@ -109,16 +109,16 @@ fn get() {
             }
           },
 
-          _ => wrong(r#"expected key e.g. `a = "b"`"#),
+          _ => wrong(r#"Expected key e.g. `a = "b"`"#),
         }
         _ => (),
       },
 
-      Err(_)  => wrong("something went wrong in 'jess.toml'"),
+      Err(_)  => wrong("Something went wrong in 'jess.toml'"),
     }
 
   } else {
-      wrong("couldn't find 'jess.toml'");
+      wrong("Couldn't find 'jess.toml'");
   }
 }
 
